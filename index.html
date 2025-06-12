@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantinho da Emanuely e do Marco Polo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #e6e6fa, #d8bfd8);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #login-container {
+            display: block;
+        }
+        #main-content {
+            display: none;
+            width: 100%;
+        }
+        .login-box {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .login-box h1 {
+            color: #6a1b9a;
+            font-family: 'Dancing Script', cursive;
+            animation: glow 2s infinite alternate;
+        }
+        .login-box input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ec407a;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        .login-box button {
+            background-color: #6a1b9a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .login-box button:hover {
+            background-color: #ec407a;
+        }
+        header {
+            background-color: #6a1b9a;
+            color: white;
+            padding: 20px;
+            border-bottom: 5px solid #ec407a;
+            position: relative;
+        }
+        .greeting-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: none;
+            margin: 0 auto;
+            max-width: 900px;
+            height: 300px;
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+        .greeting {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+        #bom-dia {
+            background: linear-gradient(to bottom, #ff7f50 0%, #ff4500 20%, #ff69b4 40%, #9370db 60%, #6a5acd 80%, #2f2f4f 100%);
+            position: relative;
+            background-image: url('https://via.placeholder.com/150x50/ffffff?text=Cloud'), url('https://via.placeholder.com/150x50/ffffff?text=Cloud'), url('https://via.placeholder.com/50x50/000000?text=Bird');
+            background-position: 20% 20%, 70% 30%, 80% 40%;
+            background-repeat: no-repeat;
+            background-size: 150px, 150px, 50px;
+        }
+        #bom-dia::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffd700 40%, #ffeb3b 60%, transparent 70%);
+            transform: translate(-50%, -70%);
+            z-index: 1;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffd700;
+        }
+        #boa-noite {
+            background: radial-gradient(circle at top, #191970 0%, #000 70%, #fff 100%);
+            position: relative;
+        }
+        #boa-noite::before {
+            content: '🌙';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 80px;
+            background: radial-gradient(circle, #f0e68c 30%, #87ceeb 70%, #191970 100%);
+            -webkit-background-clip: text;
+            color: transparent;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            text-shadow: 0 0 10px #f0e68c;
+        }
+        #boa-noite::after {
+            content: '✨';
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            font-size: 30px;
+            color: #fff;
+            animation: twinkle 5s infinite;
+        }
+        .clouds, .moon-clouds, .stars-bg {
+            display: none;
+        }
+        nav {
+            background-color: #ab47bc;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        nav a {
+            color: white;
+            margin: 0 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, color 0.3s;
+            display: inline-block;
+        }
+        nav a:hover {
+            color: #ec407a;
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        #add-section {
+            color: white;
+            margin: 0 20px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, color 0.3s;
+            display: inline-block;
+        }
+        #add-section:hover {
+            color: #ec407a;
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .poem, .message, .dream, .memory, .custom-poem {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #ec407a;
+            background-color: #f8f5ff;
+            border-radius: 8px;
+            display: block;
+        }
+        .locked {
+            display: none;
+        }
+        #countdown {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5em;
+            color: #6a1b9a;
+            background-color: #f8f5ff;
+            border: 2px solid #ec407a;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        img, video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Removida a animação de hover */
+        }
+        /* Removido o efeito de hover */
+        h2, h3 {
+            color: #6a1b9a;
+            font-family: 'Dancing Script', cursive;
+            animation: glow 2s infinite alternate;
+        }
+        .timestamp {
+            font-size: 0.8em;
+            color: #ec407a;
+            font-style: italic;
+        }
+        .hearts, .stars {
+            display: none;
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #ec407a; }
+            100% { text-shadow: 0 0 15px #ec407a; }
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        textarea {
+            width: 60%;
+            min-height: 100px;
+            padding: 10px;
+            border: 2px solid #ec407a;
+            border-radius: 8px;
+            font-size: 1em;
+            margin: 10px;
+            vertical-align: top;
+            background-color: #fff;
+        }
+        input[type="file"] {
+            margin: 10px;
+            padding: 10px;
+            border: 2px solid #ec407a;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        button {
+            background-color: #6a1b9a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #ec407a;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            background-color: #ab47bc;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .tab:hover {
+            transform: scale(1.05);
+        }
+        .tab.active {
+            background-color: #ec407a;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .theme-gallery {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .theme-card {
+            min-width: 150px;
+            height: 150px;
+            background: #ab47bc;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .theme-card:hover {
+            transform: scale(1.05);
+        }
+        .theme-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .edit-theme {
+            display: none;
+            position: absolute;
+            background: #fff;
+            padding: 10px;
+            border: 2px solid #ec407a;
+            border-radius: 8px;
+            z-index: 10;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .theme-card:hover .edit-theme {
+            display: block;
+        }
+        @media (max-width: 600px) {
+            .greeting-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .greeting {
+                width: 100%;
+                height: 200px;
+                margin: 10px 0;
+            }
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            nav a, #add-section {
+                margin: 10px 0;
+            }
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            img, video {
+                width: 100%;
+            }
+            textarea {
+                width: 100%;
+            }
+            .tabs {
+                flex-direction: column;
+            }
+            .tab {
+                margin: 5px 0;
+            }
+            .theme-gallery {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            .theme-card {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <div class="login-box">
+            <h1>Cantinho da Emanuely e do Marco Polo</h1>
+            <p>Insira a senha para acessar:</p>
+            <input type="password" id="passwordInput" placeholder="Senha">
+            <button onclick="checkPassword()">Entrar</button>
+        </div>
+    </div>
+    <div id="main-content">
+        <header>
+            <h1>Cantinho da Emanuely e do Marco Polo</h1>
+            <p>Um cantinho feito com mil milhões de amores para você, Momo!</p>
+            <div class="greeting-container" onclick="redirectGreeting(event)">
+                <div class="greeting" id="bom-dia" data-target="bom-dia"></div>
+                <div class="greeting" id="boa-noite" data-target="boa-noite"></div>
+            </div>
+        </header>
+        <nav>
+            <a href="#poemas" onclick="showSection('poemas')">Poemas</a>
+            <a href="#mensagens" onclick="showSection('mensagens')">Mensagens</a>
+            <a href="#sonhos" onclick="showSection('sonhos')">Sonhos</a>
+            <a href="#memorias" onclick="showSection('memorias')">Memórias</a>
+            <a href="#diadosnamorados" onclick="showSection('diadosnamorados')">Dia dos Namorados</a>
+            <a href="#marco-polo" onclick="showSection('marco-polo')">Marco Polo</a>
+            <a href="#emanuely" onclick="showSection('emanuely')">Emanuely</a>
+            <div id="add-section" onclick="addNewSection()">+ Adicionar Seção</div>
+        </nav>
+        <div class="container">
+            <section id="poemas" class="section">
+                <h2>Poemas para Minha Momo</h2>
+                <div class="tabs">
+                    <div class="tab active" onclick="showTab('amor')">Amor</div>
+                    <div class="tab" onclick="showTab('sorriso')">Sorriso</div>
+                    <div class="tab" onclick="showTab('cachos')">Cachos</div>
+                    <div class="tab" onclick="showTab('galaxia')">Galáxia</div>
+                    <div class="tab" onclick="showTab('sonetos')">Sonetos</div>
+                    <div class="tab" onclick="showTab('adicionar-tema')">Adicionar Tema</div>
+                </div>
+                <div id="amor" class="tab-content active">
+                    <div class="poem">
+                        <h3>Minha Emanu para Sempre</h3>
+                        <p>Emanu, meu amor, meu coração é seu,<br> Cada batida minha, por você se formou.<br> Te amo com a alma, mil milhões e além,<br> Minha Momo, meu tudo, meu maior bem.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 10:00</p>
+                    </div>
+                    <div class="poem">
+                        <h3>Amor Eterno</h3>
+                        <p>Teu olhar me guia, um farol no mar,<br> Meu amor por ti é o que sou de verdade.<br> Momo, contigo quero sempre estar,<br> Te amo com toda a minha eternidade.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 10:05</p>
+                    </div>
+                    <button onclick="addNewPoem('amor')">Adicionar Poema</button>
+                </div>
+                <div id="sorriso" class="tab-content">
+                    <div class="poem">
+                        <h3>Sorriso de Momo</h3>
+                        <p>Seu sorriso, Momo, é meu sol particular,<br> Faz meu mundo girar, me faz sonhar.<br> Cada risada tua, amor, é melodia,<br> Meu amor por você nunca terá fim, alegria.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 12:00</p>
+                    </div>
+                    <div class="poem">
+                        <h3>Riso de Luz</h3>
+                        <p>Teu riso é um raio que corta a escuridão,<br> Momo, tua alegria é minha salvação.<br> Cada sorriso teu me faz renascer,<br> Te amo, minha Estrela, com todo o meu ser.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 12:05</p>
+                    </div>
+                    <button onclick="addNewPoem('sorriso')">Adicionar Poema</button>
+                </div>
+                <div id="cachos" class="tab-content">
+                    <div class="poem">
+                        <h3>Cachos de Momo</h3>
+                        <p>Teus cachos, amor, dançam como o vento,<br> Cada curva um encanto, meu coração num momento.<br> Seu sorriso, minha luz, ilumina meu caminho,<br> Te amo, Emanuely, com alma e carinho.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 15:20</p>
+                    </div>
+                    <div class="poem">
+                        <h3>Onda de Beleza</h3>
+                        <p>Teus cachos são ondas num mar de encanto,<br> Momo, cada curva é um doce espanto.<br> Dançam ao vento, meu coração a guiar,<br> Te amo, minha Estrela, sem jamais parar.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 15:25</p>
+                    </div>
+                    <button onclick="addNewPoem('cachos')">Adicionar Poema</button>
+                </div>
+                <div id="galaxia" class="tab-content">
+                    <div class="poem">
+                        <h3>Galáxia nos Teus Olhos</h3>
+                        <p>Emanu, minha Momo, teus olhos são um mistério,<br> Galáxias brilhando, um universo inteiro.<br> Hipnotizam meu ser, veem minha alma a florescer,<br> Te amo, amor, com todo meu querer.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 09:00</p>
+                    </div>
+                    <div class="poem">
+                        <h3>Céu em Teus Olhos</h3>
+                        <p>Teus olhos, Momo, são um céu a brilhar,<br> Cada estrela tua me faz suspirar.<br> Galáxia de amor, meu destino a traçar,<br> Te amo, Emanu, sem nunca me cansar.</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 09:05</p>
+                    </div>
+                    <button onclick="addNewPoem('galaxia')">Adicionar Poema</button>
+                </div>
+                <div id="sonetos" class="tab-content">
+                    <div class="poem">
+                        <h3>Soneto do Teu Sorriso</h3>
+                        <p>Teu sorriso, oh Momo, é luz que me guia,<br> Um raio de sol na manhã a brilhar.<br> Nos teus lábios, a vida se faz mais mia,<br> E o amor em meu peito começa a se formar.</p>
+                        <p>Com cada risada, o mundo se acalma,<br> Teu encanto é um verso que nunca finda.<br> Minha alma em teus olhos se transforma,<br> E teu riso, Momo, é minha morada.</p>
+                        <p class="timestamp">Adicionado em: 06/06/2025 20:00</p>
+                    </div>
+                    <div class="poem">
+                        <h3>Soneto dos Teus Cachos</h3>
+                        <p>Teus cachos, Emanu, dançam ao vento leve,<br> Ondas de beleza que o céu inveja ter.<br> Cada curva tua é um doce arrependimento,<br> Que me prende a ti, por coração a mim.</p>
+                        <p>Nos teus cabelos, encontro meu refúgio,<br> Um mar de amor onde meu coração navega.<br> Momo, teu charme é meu mais puro abrigo,<br> E teu riso, amor, minha eterna viagem.</p>
+                        <p class="timestamp">Adicionado em: 06/06/2025 20:05</p>
+                    </div>
+                    <div class="poem">
+                        <h3>Soneto da Tua Alma</h3>
+                        <p>Teus olhos, amor, são galáxias a brilhar,<br> Um universo vasto onde me perco a mirar.<br> Na tua alma, encontro o que sonhei achar,<br> Um amor eterno, sem fim, a desfrutar.</p>
+                        <p>Com cada olhar, meu ser se eleva ao céu,<br> Teu brilho, Emanu, é meu norte a seguir.<br> Momo, contigo, o mundo é mais real,<br> Te amo, minha vida, para sempre a unir.</p>
+                        <p class="timestamp">Adicionado em: 06/06/2025 20:10</p>
+                    </div>
+                    <button onclick="addNewPoem('sonetos')">Adicionar Poema</button>
+                </div>
+                <div id="adicionar-tema" class="tab-content">
+                    <div class="custom-poem">
+                        <h3>Adicionar Novo Tema</h3>
+                        <input type="text" id="new-theme-title" placeholder="Título do novo tema" style="width: 60%; padding: 10px; margin: 10px 0;">
+                        <input type="file" id="new-theme-image" accept="image/*" style="margin: 10px 0;">
+                        <button onclick="addNewTheme()">Adicionar Tema</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mensagens" class="section">
+                <h2>Mensagens para Você</h2>
+                <div class="tabs">
+                    <div class="tab active" id="bom-dia-tab" onclick="showTab('bom-dia')">Bom Dia</div>
+                    <div class="tab" id="boa-noite-tab" onclick="showTab('boa-noite')">Boa Noite</div>
+                </div>
+                <div id="bom-dia" class="tab-content active">
+                    <div class="message">
+                        <h3>Bom Dia, Minha Momo!</h3>
+                        <p>Bom dia, Momo! Que seu sorriso ilumine o mundo hoje, como sempre ilumina meu coração. Te amo mil milhões!</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 06:00</p>
+                    </div>
+                    <div class="message">
+                        <h3>Outro Bom Dia, Amor!</h3>
+                        <p>Acorda, minha Emanu! Seu olhar de amor faz meu dia brilhar. Te amo com toda minha alma!</p>
+                        <p class="timestamp">Adicionado em: 02/06/2025 07:00</p>
+                    </div>
+                </div>
+                <div id="boa-noite" class="tab-content">
+                    <div class="message">
+                        <h3>Boa Noite, Minha Estrela!</h3>
+                        <p>Boa noite, minha Estrela! Que seus sonhos sejam tão lindos quanto seus cachos. Te amo mais que tudo!</p>
+                        <p class="timestamp">Adicionado em: 01/06/2025 22:00</p>
+                    </div>
+                    <div class="message">
+                        <h3>Boa Noite, Minha Momo!</h3>
+                        <p>Momo, que seus sonhos sejam tão lindos quanto seus cachos. Te amo mais que tudo, descansa!</p>
+                        <p class="timestamp">Adicionado em: 02/06/2025 21:30</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sonhos" class="section">
+                <h2>Nossos Sonhos</h2>
+                <div class="theme-gallery">
+                    <div class="theme-card" onclick="showTab('carros')" data-target="carros">
+                        <img src="https://via.placeholder.com/150/000000/FFFFFF?text=Carros" alt="Carros">
+                        <div class="edit-theme">
+                            <input type="text" id="edit-carros-title" value="Carros" style="width: 100%; margin-bottom: 10px;">
+                            <input type="file" id="edit-carros-image" accept="image/*">
+                            <button onclick="saveThemeEdit('carros')">Salvar</button>
+                        </div>
+                    </div>
+                    <div class="theme-card" onclick="showTab('adicionar-temas')" data-target="adicionar-temas">
+                        <img src="https://via.placeholder.com/150/000000/FFFFFF?text=+Adicionar" alt="Adicionar Temas">
+                        <div class="edit-theme">
+                            <input type="text" id="edit-adicionar-title" value="Adicionar Temas" style="width: 100%; margin-bottom: 10px;">
+                            <input type="file" id="edit-adicionar-image" accept="image/*">
+                            <button onclick="saveThemeEdit('adicionar-temas')">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="carros" class="tab-content active">
+                    <div class="dream">
+                        <h3>Seus Sonhos</h3>
+                        <p>Opala clássico, brilhando na estrada, poderosa e cheia de vida!</p>
+                        <img src="https://i.pinimg.com/736x/61/36/80/613680b55e1ad7d252269f5f53511662.jpg" alt="Opala">
+                        <p>Dodge Hellcat, rugindo com força, sua paixão acelerando o coração!</p>
+                        <img src="https://auto-drive.pt/wp-content/uploads/2023/05/2023-Dodge-Challenger-Black-Ghost-19-1536x1024_3.webp" alt="Dodge Hellcat">
+                    </div>
+                    <div class="dream">
+                        <h3>Meus Sonhos</h3>
+                        <p>Fusca com borikit, voando nas pistas, pronto pra corrida dos meus sonhos!</p>
+                        <img src="https://www.tvtime.com/_next/image?url=https%3A%2F%2Fartworks.thetvdb.com%2Fbanners%2Fv4%2Fseries%2F413479%2Fbackgrounds%2F61ba5c4aefc73.jpg&w=3840&q=75" alt="Fusca">
+                        <p>Honda Civic 2025 rebaixado, puro estilo e velocidade na medida!</p>
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjgnzBSReqiaI8ydp2kMgz_qcuRYR0_RB-nHY0B3J4Ljpp1HGH0gWhnqyZ1gVwPlkNH0HIjnY-395lPX0kSLsvoxmWngKhe0SKXQzql2mYTKOgRbjk9YgvGJHwoPVrK9jy0UI0A1yaw3J-xFxvJGpGG2x7Lswu6u6jid3gixU2g0iMF-9x0pBcwt9vaSZHR/s600-rw/Honda-Civic-RS-2025%20%283%29.jpeg" alt="Honda Civic">
+                    </div>
+                </div>
+                <div id="adicionar-temas" class="tab-content">
+                    <div class="custom-dream">
+                        <h3>Adicionar Novo Tema de Sonhos</h3>
+                        <input type="text" id="new-dream-theme-title" placeholder="Título do novo tema" style="width: 60%; padding: 10px; margin: 10px 0;">
+                        <input type="file" id="new-dream-theme-image" accept="image/*" style="margin: 10px 0;">
+                        <button onclick="addNewDreamTheme()">Adicionar Tema</button>
+                        <div id="saved-dream-themes"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="memorias" class="section">
+                <h2>Nossas Memórias</h2>
+                <div class="memory">
+                    <textarea id="memoryInput" placeholder="Digite uma memória especial..."></textarea>
+                    <input type="file" id="memoryFile" accept="image/*,video/*">
+                    <button onclick="saveMemory()">Enviar</button>
+                    <div id="savedMemories"></div>
+                </div>
+            </section>
+
+            <section id="diadosnamorados" class="section">
+                <h2>Dia dos Namorados</h2>
+                <div id="countdown"></div>
+                <div id="locked-content" class="locked">
+                    <h3>Minha Momo, Meu Amor</h3>
+                    <p>Momo, amor, minha esposa, te amo, te amo, com mil milhões de amor, teus cachos, teu sorriso, tua brisa.<br> Te amo com cada pedacinho do meu ser! Neste Dia dos Namorados, quero te dizer que você é o meu tudo, minha luz, meu motivo para sorrir todos os dias!<br> Seu olhar de galáxia me guia, seus cachos dançando ao vento me encantam.<br> E seu sorriso é o que faz meu mundo girar.<br> Prometo estar sempre ao seu lado, construindo juntos e amando você mais a cada segundo.<br> Você é meu tudo, meu futuro, minha razão.<br> Cada momento com você é um tesouro, e quero passar todos os meus dias fazendo você feliz.<br> Feliz 12 de junho, meu amor!</p>
+                    <p class="timestamp">Adicionado em: 05/06/2025 00:00</p>
+                </div>
+                <div id="unlock-message" class="unlock-message">
+                    <p>Minha Momo, minha esposa!</p>
+                    <p>Esta surpresa será liberada no Dia dos Namorados!</p>
+                </div>
+            </section>
+
+            <section id="marco-polo" class="section">
+                <h2>Marco Polo</h2>
+                <div class="tabs">
+                    <div class="tab active" onclick="showTab('gostos-marco')">Gostos</div>
+                    <div class="tab" onclick="showTab('adicionar-gosto-marco')">Adicionar Gosto</div>
+                </div>
+                <div id="gostos-marco" class="tab-content active">
+                    <div class="custom-poem">
+                        <h3>Meus Gostos</h3>
+                        <p><strong>Personagem Preferido:</strong> Homem de Ferro</p>
+                        <p><strong>Carro Preferido:</strong> Fusca</p>
+                        <p><strong>Cor Favorita:</strong> Vermelha</p>
+                        <p><strong>Jogos:</strong> Diversos títulos emocionantes</p>
+                        <p><strong>Série:</strong> SWAT</p>
+                    </div>
+                </div>
+                <div id="adicionar-gosto-marco" class="tab-content">
+                    <div class="custom-poem">
+                        <h3>Adicionar Novo Gosto</h3>
+                        <input type="text" id="new-gosto-marco" placeholder="Digite um novo gosto" style="width: 60%; padding: 10px; margin: 10px 0;">
+                        <button onclick="addNewGosto('marco')">Adicionar Gosto</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="emanuely" class="section">
+                <h2>Emanuely</h2>
+                <div class="tabs">
+                    <div class="tab active" onclick="showTab('gostos-emanuely')">Gostos</div>
+                    <div class="tab" onclick="showTab('adicionar-gosto-emanuely')">Adicionar Gosto</div>
+                </div>
+                <div id="gostos-emanuely" class="tab-content active">
+                    <div class="custom-poem">
+                        <h3>Meus Gostos</h3>
+                        <p><strong>Personagem Preferido:</strong> Deadpool</p>
+                        <p><strong>Carro Preferido:</strong> Dodge Hellcat</p>
+                        <p><strong>Cor Favorita:</strong> Roxa</p>
+                        <p><strong>Filme/Musical:</strong> Wicked</p>
+                        <p><strong>Série:</strong> Supernatural</p>
+                    </div>
+                </div>
+                <div id="adicionar-gosto-emanuely" class="tab-content">
+                    <div class="custom-poem">
+                        <h3>Adicionar Novo Gosto</h3>
+                        <input type="text" id="new-gosto-emanuely" placeholder="Digite um novo gosto" style="width: 60%; padding: 10px; margin: 10px 0;">
+                        <button onclick="addNewGosto('emanuely')">Adicionar Gosto</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        console.log('Site carregado, verificando conteúdo...');
+
+        function checkPassword() {
+            const passwordInput = document.getElementById('passwordInput').value;
+            if (passwordInput === 'batata') {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                window.onload();
+            } else {
+                alert('Senha incorreta. Tente novamente.');
+            }
+        }
+
+        function checkDate() {
+            const today = new Date();
+            const valentinesDay = new Date('2025-06-12 00:00:00');
+            const lockedContent = document.getElementById('locked-content');
+            const unlockMessage = document.getElementById('unlock-message');
+            const countdownDiv = document.getElementById('countdown');
+
+            if (today >= valentinesDay) {
+                lockedContent.classList.remove('locked');
+                unlockMessage.style.display = 'none';
+                countdownDiv.style.display = 'none';
+            } else {
+                const timeDiff = valentinesDay - today;
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                countdownDiv.innerHTML = `Faltam ${days}d ${hours}h ${minutes}m ${seconds}s para o Dia dos Namorados!`;
+                setTimeout(checkDate, 1000);
+            }
+            console.log('Data verificada:', today, valentinesDay);
+        }
+
+        function redirectGreeting(event) {
+            const target = event.target.closest('.greeting');
+            if (target) {
+                showSection('mensagens');
+                const tabId = target.getAttribute('data-target');
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                document.querySelector(`#${tabId}-tab`).classList.add('active');
+                console.log(`Redirecionado para ${tabId}`);
+            }
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            const firstTab = document.querySelector(`#${sectionId} .tab`);
+            if (firstTab) {
+                const tabId = firstTab.getAttribute('onclick').match(/'([^']+)'/)[1];
+                showTab(tabId);
+            }
+        }
+
+        function showTab(tabId) {
+            const section = document.querySelector('.section.active');
+            if (!section) return;
+            section.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            section.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            const targetTab = section.querySelector(`#${tabId}`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+                section.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+            }
+        }
+
+        function addNewSection() {
+            const sectionName = prompt('Digite o nome da nova seção:');
+            if (sectionName) {
+                const nav = document.querySelector('nav');
+                const newLink = document.createElement('a');
+                newLink.href = `#${sectionName.toLowerCase()}`;
+                newLink.textContent = sectionName;
+                newLink.onclick = function() { showSection(sectionName.toLowerCase()); };
+                nav.insertBefore(newLink, document.getElementById('add-section'));
+                const container = document.querySelector('.container');
+                const newSection = document.createElement('section');
+                newSection.id = sectionName.toLowerCase();
+                newSection.classList.add('section');
+                newSection.innerHTML = `<h2>${sectionName}</h2><p>Conteúdo da nova seção.</p>`;
+                container.appendChild(newSection);
+            }
+        }
+
+        function addNewTheme() {
+            const title = document.getElementById('new-theme-title').value.trim();
+            const fileInput = document.getElementById('new-theme-image');
+            if (title && fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newTab = document.createElement('div');
+                    newTab.classList.add('tab');
+                    newTab.textContent = title;
+                    newTab.onclick = function() { showTab(title.toLowerCase()); };
+                    document.querySelector('#poemas .tabs').insertBefore(newTab, document.querySelector('#poemas .tabs .tab:last-child'));
+
+                    const newContent = document.createElement('div');
+                    newContent.id = title.toLowerCase();
+                    newContent.classList.add('tab-content');
+                    newContent.innerHTML = `<div class="poem"><h3>Novo Poema</h3><p>Adicione seu poema aqui.</p><p class="timestamp">Adicionado em: ${new Date().toLocaleString('pt-BR')}</p></div><button onclick="addNewPoem('${title.toLowerCase()}')">Adicionar Poema</button>`;
+                    document.querySelector('#poemas').appendChild(newContent);
+
+                    const themes = JSON.parse(localStorage.getItem('customThemes') || '{}');
+                    themes[title.toLowerCase()] = { image: e.target.result, poems: [] };
+                    localStorage.setItem('customThemes', JSON.stringify(themes));
+                    document.getElementById('new-theme-title').value = '';
+                    fileInput.value = '';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        function addNewPoem(theme) {
+            const poemText = prompt('Digite o texto do novo poema:');
+            if (poemText) {
+                const newPoem = document.createElement('div');
+                newPoem.classList.add('poem');
+                newPoem.innerHTML = `<h3>Novo Poema</h3><p>${poemText}</p><p class="timestamp">Adicionado em: ${new Date().toLocaleString('pt-BR')}</p>`;
+                document.querySelector(`#${theme}`).appendChild(newPoem);
+            }
+        }
+
+        function saveThemeEdit(themeId) {
+            const titleInput = document.getElementById(`edit-${themeId}-title`);
+            const fileInput = document.getElementById(`edit-${themeId}-image`);
+            const newTitle = titleInput.value.trim();
+            if (newTitle) {
+                const themeCard = document.querySelector(`.theme-card[data-target="${themeId}"]`);
+                themeCard.querySelector('.tab').textContent = newTitle;
+                if (fileInput.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        themeCard.querySelector('img').src = e.target.result;
+                        const themes = JSON.parse(localStorage.getItem('customThemes') || '{}');
+                        themes[themeId] = { ...themes[themeId], image: e.target.result };
+                        localStorage.setItem('customThemes', JSON.stringify(themes));
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+            }
+        }
+
+        function addNewDreamTheme() {
+            const title = document.getElementById('new-dream-theme-title').value.trim();
+            const fileInput = document.getElementById('new-dream-theme-image');
+            if (title && fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newCard = document.createElement('div');
+                    newCard.classList.add('theme-card');
+                    newCard.innerHTML = `<img src="${e.target.result}" alt="${title}"><div class="edit-theme"><input type="text" id="edit-${title.toLowerCase()}-title" value="${title}" style="width: 100%; margin-bottom: 10px;"><input type="file" id="edit-${title.toLowerCase()}-image" accept="image/*"><button onclick="saveThemeEdit('${title.toLowerCase()}')">Salvar</button></div>`;
+                    newCard.onclick = function() { showTab(title.toLowerCase()); };
+                    newCard.setAttribute('data-target', title.toLowerCase());
+                    document.querySelector('.theme-gallery').appendChild(newCard);
+
+                    const newContent = document.createElement('div');
+                    newContent.id = title.toLowerCase();
+                    newContent.classList.add('tab-content');
+                    newContent.innerHTML = `<div class="dream"><h3>Novo Sonho</h3><p>Adicione seu sonho aqui.</p><p class="timestamp">Adicionado em: ${new Date().toLocaleString('pt-BR')}</p></div>`;
+                    document.querySelector('#sonhos').appendChild(newContent);
+
+                    const themes = JSON.parse(localStorage.getItem('dreamThemes') || '{}');
+                    themes[title.toLowerCase()] = { image: e.target.result, dreams: [] };
+                    localStorage.setItem('dreamThemes', JSON.stringify(themes));
+                    document.getElementById('new-dream-theme-title').value = '';
+                    fileInput.value = '';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        function saveMemory() {
+            const memoryInput = document.getElementById('memoryInput');
+            const memoryFile = document.getElementById('memoryFile');
+            const savedMemories = document.getElementById('savedMemories');
+            const memoryText = memoryInput.value.trim();
+            let memories = JSON.parse(localStorage.getItem('memories') || '[]');
+            const timestamp = new Date().toLocaleString('pt-BR');
+
+            if (memoryText || memoryFile.files.length > 0) {
+                const memoryDiv = document.createElement('div');
+                memoryDiv.classList.add('memory');
+
+                if (memoryText) {
+                    memoryDiv.innerHTML += `<p>${memoryText}</p>`;
+                    memories.push({ type: 'text', content: memoryText, timestamp });
+                }
+
+                if (memoryFile.files.length > 0) {
+                    const file = memoryFile.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (file.type.startsWith('image/')) {
+                            memoryDiv.innerHTML += `<img src="${e.target.result}" alt="Memória">`;
+                            memories.push({ type: 'image', content: e.target.result, timestamp });
+                        } else if (file.type.startsWith('video/')) {
+                            memoryDiv.innerHTML += `<video controls><source src="${e.target.result}" type="${file.type}"></video>`;
+                            memories.push({ type: 'video', content: e.target.result, timestamp });
+                        }
+                        memoryDiv.innerHTML += `<p class="timestamp">Adicionado em: ${timestamp}</p>`;
+                        savedMemories.appendChild(memoryDiv);
+                        localStorage.setItem('memories', JSON.stringify(memories));
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    memoryDiv.innerHTML += `<p class="timestamp">Adicionado em: ${timestamp}</p>`;
+                    savedMemories.appendChild(memoryDiv);
+                    localStorage.setItem('memories', JSON.stringify(memories));
+                }
+
+                memoryInput.value = '';
+                memoryFile.value = '';
+            }
+        }
+
+        function loadMemories() {
+            const savedMemories = document.getElementById('savedMemories');
+            let memories = JSON.parse(localStorage.getItem('memories') || '[]');
+            memories.forEach(memory => {
+                const memoryDiv = document.createElement('div');
+                memoryDiv.classList.add('memory');
+                if (memory.type === 'text') {
+                    memoryDiv.innerHTML = `<p>${memory.content}</p>`;
+                } else if (memory.type === 'image') {
+                    memoryDiv.innerHTML = `<img src="${memory.content}" alt="Memória">`;
+                } else if (memory.type === 'video') {
+                    memoryDiv.innerHTML = `<video controls><source src="${memory.content}" type="video/mp4"></video>`;
+                }
+                memoryDiv.innerHTML += `<p class="timestamp">Adicionado em: ${memory.timestamp}</p>`;
+                savedMemories.appendChild(memoryDiv);
+            });
+        }
+
+        function addNewGosto(person) {
+            const gosto = document.getElementById(`new-gosto-${person}`).value.trim();
+            if (gosto) {
+                const gostoDiv = document.createElement('p');
+                gostoDiv.innerHTML = `<strong>${gosto}</strong>`;
+                document.querySelector(`#gostos-${person}`).appendChild(gostoDiv);
+                document.getElementById(`new-gosto-${person}`).value = '';
+            }
+        }
+
+        window.onload = () => {
+            checkDate();
+            loadMemories();
+            document.getElementById('diadosnamorados').classList.add('active');
+            console.log('Site inicializado com sucesso');
+        };
+    </script>
+</body>
+</html>
